@@ -8,13 +8,14 @@ import Journal from './models/journal_model.js';
 // App Config
 const app = express();
 const port = process.env.PORT || 8001;
+const connection_url = 'mongodb+srv://admin:zN2yWWN2b94mlWGm@cluster0.asois.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 
 // Middlewares
 app.use(Cors());
 app.use(express.json());
 
 // DB Config
-mongoose.connect('mongodb+srv://admin:zN2yWWN2b94mlWGm@cluster0.asois.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', 
+mongoose.connect(connection_url, 
   {useNewUrlParser: true, useUnifiedTopology: true}
 );
 const connection = mongoose.connection;
