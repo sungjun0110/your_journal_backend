@@ -59,7 +59,6 @@ app.post("/journals", async (req, res) => {
   const { authorization } = req.headers;
   const [username, password] = authorization.split(":");
   const user = await User.findOne({ username }).exec();
-  console.log(user);
   const journalsItems = req.body;
   if (!user || user.password !== password) {
     res.status(403);
