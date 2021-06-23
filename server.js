@@ -56,8 +56,44 @@ app.post("/login", async (req, res) => {
 });
 
 app.post("/journals", async (req, res) => {
-  const {username, title, content, date} = req.body;
+  const { authorization } = req.headers;
+  const [username, password] = authorization.split(":");
+  const user = await User.findOne({ username }).exec();
+  console.log(user);
+  const journalsItems = req.body;
+  if (!user || user.password !== password) {
+    res.status(403);
+    res.json({
+      message: "user does not exist",
+    });
+    return;
+  }
+  const journals = await Journal.findOne({ author: username }).exec();
+  if (!journals) {
+    await Journal.create({
+      author: username,
+      journals: journalsItems,
+    })
+  } else {
+    journals.journals = journalsItems;
+    await journals.save();
+  }
+  res.json(journalsItems);
+});
 
+app.get("/journals", async (req, res) => {
+  const { authorization } = req.headers;
+  const [username, password] = authorization.split(":");
+  const user = await User.findOne({ username }).exec();
+  if (!user || user.password !== password) {
+    res.status(403);
+    res.json({
+      message: "user does not exist",
+    });
+    return;
+  }
+  const { journals } = await Journal.findOne({ author: username }).exec();
+  res.json(journals);
 });
 
 // Listener

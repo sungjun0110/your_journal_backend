@@ -9,4 +9,4 @@ const userSchema = mongoose.Schema({
   }],
 });
 
-export default mongoose.model('Journal', userSchema);
+export default mongoose.model('Journals', userSchema);
