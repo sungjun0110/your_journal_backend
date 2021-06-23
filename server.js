@@ -14,7 +14,9 @@ app.use(Cors());
 app.use(express.json());
 
 // DB Config
-mongoose.connect('mongodb://localhost/urjournal', {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect('mongodb+srv://admin:zN2yWWN2b94mlWGm@cluster0.asois.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', 
+  {useNewUrlParser: true, useUnifiedTopology: true}
+);
 const connection = mongoose.connection;
 connection.once('open', () => {
   console.log("MongoDB database connection established successfully")
