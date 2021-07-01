@@ -98,5 +98,22 @@ app.get("/journals", async (req, res) => {
   res.json(journals);
 });
 
+app.delete("/journals", async (req, res) => {
+  const { authorization } = req.headers;
+  const [username, password] = authorization.split(":");
+  const journals = await Journal.findOne({ author: username }).exec();
+  if (!journals) {
+    res.status(403);
+    res.json({
+      message: "Journal for this user does not exist",
+    })
+    return;
+  } else {
+    journals.deleteOne({_id: req.header.id});
+    await journals.save();
+  }
+  res.json(journalsItems);
+})
+
 // Listener
 app.listen(port, () => console.log(`listening on localhost: ${port}`));
