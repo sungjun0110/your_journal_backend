@@ -102,6 +102,7 @@ app.delete("/journals", async (req, res) => {
   const { authorization } = req.headers;
   const [username, password] = authorization.split(":");
   const journals = await Journal.findOne({ author: username }).exec();
+  const journal = journals.journals;
   if (!journals) {
     res.status(403);
     res.json({
@@ -109,10 +110,34 @@ app.delete("/journals", async (req, res) => {
     })
     return;
   } else {
-    journals.deleteOne({_id: req.header.id});
+    for (let i = 0; i < journal.length; i++) {
+      if (journal[i]._id == req.headers.id) {
+        journal.splice(i, 1);
+      }
+    }
     await journals.save();
   }
-  res.json(journalsItems);
+  res.json(journal);
+})
+
+app.put("/journals", async (req, res) => {
+  const { authorization } = req.headers;
+  const [username, password] = authorization.split(":");
+  const journalsRaw = await Journal.findOne({ author: username }).exec();
+  const journals = journalsRaw.journals;
+  const journal = journals.find(element => element._id == req.body.id);
+  if (!journal) {
+    res.status(403);
+    res.json({
+      message: "Journal does not exist",
+    })
+    return;
+  } else {
+    journal.title = req.body.title;
+    journal.content = req.body.content;
+    await journalsRaw.save();
+  }
+  res.json(journal);
 })
 
 // Listener
