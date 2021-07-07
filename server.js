@@ -95,7 +95,7 @@ app.get("/journals", async (req, res) => {
     return;
   }
   const { journals } = await Journal.findOne({ author: username }).exec();
-  res.json(journals);
+  res.json(journals.reverse());
 });
 
 app.delete("/journals", async (req, res) => {
